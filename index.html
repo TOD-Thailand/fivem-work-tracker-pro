@@ -1,0 +1,2595 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FiveM Work Tracker Pro</title>
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiRml2ZU0gV29yayBUcmFja2VyIFBybyIsInNob3J0X25hbWUiOiJGaXZlTVRyYWNrZXIiLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsInN0YXJ0X3VybCI6Ii8iLCJ0aGVtZV9jb2xvciI6IiM1ODY1RjIiLCJiYWNrZ3JvdW5kX2NvbG9yIjoiIzJjMmY0MiIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSFpwWlhkQ2IzZzlJakFnTUNBeE1EQWdNVEF3SWlCbWFXeHNQU0lqTlRnMk5XWXlJajRLSUNBOGNtVmpkQ0IzYVdSMGFEMGlNVEF3SWlCb1pXbG5hSFE5SWpFd01DSWdjbmc5SWpVaUlHWnBiR3c5SWlNMU9EWTFaakppTHo0S1BDOXpkbWMrSWc9PSIsInR5cGUiOiJpbWFnZS9zdmcreG1sIiwic2l6ZXMiOiIxMDB4MTAwIn1dfQ==">
+    <style>
+        :root {
+            --primary-color: #5865F2;
+            --secondary-color: #2c2f42;
+            --accent-color: #7289DA;
+            --success-color: #00d26a;
+            --warning-color: #faa81a;
+            --danger-color: #ed4245;
+            --bg-color: #ffffff;
+            --text-color: #2c2f33;
+            --border-color: #e3e5e8;
+            --shadow-color: rgba(0,0,0,0.1);
+            --card-bg: #ffffff;
+            --gradient-main: linear-gradient(135deg, #5865F2 0%, #7289DA 100%);
+            --gradient-card: linear-gradient(135deg, #7289DA 0%, #99AAB5 100%);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #2c2f33;
+            --text-color: #ffffff;
+            --border-color: #40444b;
+            --shadow-color: rgba(255,255,255,0.1);
+            --card-bg: #36393f;
+            --gradient-main: linear-gradient(135deg, #2c2f33 0%, #23272a 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--gradient-main);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .main-panel {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px var(--shadow-color);
+            overflow: hidden;
+        }
+
+        .analytics-panel {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px var(--shadow-color);
+            overflow: hidden;
+        }
+
+        .header {
+            background: var(--gradient-card);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .current-time {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            background: var(--border-color);
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px 15px;
+            background: none;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--text-color);
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .tab:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .discord-login {
+            background: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .discord-login.logged-in {
+            background: var(--success-color);
+        }
+
+        .discord-btn {
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px auto 0;
+            justify-content: center;
+        }
+
+        .discord-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid white;
+        }
+
+        .name-section {
+            margin-bottom: 30px;
+        }
+
+        .name-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .name-section input {
+            width: 100%;
+            padding: 12px 16px 12px 45px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-color);
+            opacity: 0.6;
+        }
+
+        .name-section input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .job-selector {
+            margin-bottom: 20px;
+        }
+
+        .job-selector select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .job-icons {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+
+        .job-icon {
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            background: var(--bg-color);
+            transition: all 0.3s;
+            cursor: pointer;
+            flex: 1;
+            margin: 0 5px;
+        }
+
+        .job-icon:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .job-icon.active {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        #nameSuggestions {
+            box-shadow: 0 4px 6px var(--shadow-color);
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-checkin {
+            background: linear-gradient(135deg, #00d26a 0%, #00b894 100%);
+            color: white;
+        }
+
+        .btn-checkout {
+            background: linear-gradient(135deg, #ed4245 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .btn-break {
+            background: linear-gradient(135deg, #faa81a 0%, #e67e22 100%);
+            color: white;
+        }
+
+        .btn-voice {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .status {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-color);
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .status-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            background: var(--bg-color);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px var(--shadow-color);
+            text-align: center;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .working-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: var(--success-color);
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .productivity-score {
+            text-align: center;
+            padding: 20px;
+            background: var(--gradient-card);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(#00d26a 0deg, #00d26a calc(var(--score) * 3.6deg), rgba(255,255,255,0.3) calc(var(--score) * 3.6deg), rgba(255,255,255,0.3) 360deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            position: relative;
+        }
+
+        .score-circle::before {
+            content: '';
+            width: 90px;
+            height: 90px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .score-number {
+            font-size: 2rem;
+            font-weight: bold;
+            z-index: 1;
+            position: relative;
+        }
+
+        .chart-container {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .chart {
+            width: 100%;
+            height: 200px;
+            background: var(--bg-color);
+            border-radius: 10px;
+            display: flex;
+            align-items: end;
+            padding: 20px;
+            gap: 10px;
+        }
+
+        .chart-bar {
+            flex: 1;
+            background: var(--gradient-card);
+            border-radius: 5px 5px 0 0;
+            min-height: 20px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .chart-bar:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        .goals-section {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .goal-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: var(--bg-color);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .goal-progress {
+            width: 100px;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .goal-progress-bar {
+            height: 100%;
+            background: var(--success-color);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .achievements {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .achievement {
+            text-align: center;
+            padding: 15px;
+            background: var(--bg-color);
+            border-radius: 10px;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .achievement.unlocked {
+            border-color: var(--success-color);
+            background: linear-gradient(135deg, #00d26a 0%, #00b894 100%);
+            color: white;
+        }
+
+        .achievement:hover {
+            transform: scale(1.05);
+        }
+
+        .break-timer {
+            background: var(--warning-color);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .break-timer.active {
+            display: block;
+        }
+
+        .export-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .notes-section {
+            margin-top: 20px;
+        }
+
+        .notes-section textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .voice-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .voice-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-card);
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            transition: all 0.3s;
+        }
+
+        .voice-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .voice-btn.listening {
+            animation: voicePulse 1s infinite;
+        }
+
+        @keyframes voicePulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+
+        .team-dashboard {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+        }
+
+        .team-member {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            background: var(--bg-color);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .status-indicator.working {
+            background: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.break {
+            background: var(--warning-color);
+        }
+
+        .status-indicator.offline {
+            background: #ccc;
+        }
+
+        .floating-stats {
+            position: fixed;
+            top: 50%;
+            left: 20px;
+            transform: translateY(-50%);
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            z-index: 100;
+            transition: all 0.3s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .floating-stats.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        @media (max-width: 768px) {
+            .floating-stats {
+                position: relative;
+                transform: none;
+                margin-bottom: 20px;
+                opacity: 1;
+                pointer-events: all;
+            }
+        }
+
+        .fivem-badge {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-stats" id="floatingStats">
+        <h4>📊 สถิติด่วน</h4>
+        <div id="quickStats"></div>
+    </div>
+
+    <div class="voice-controls">
+        <button class="voice-btn" id="voiceBtn" onclick="toggleVoiceRecognition()">
+            🎤
+        </button>
+    </div>
+
+    <div class="notification" id="notification">
+        <div id="notificationContent"></div>
+    </div>
+
+    <div class="container">
+        <div class="main-panel">
+            <div class="header">
+                <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+                <h1>
+                    <span class="logo-icon">🎮</span>
+                    FiveM Work Tracker Pro
+                    <span class="fivem-badge">ROLEPLAY</span>
+                </h1>
+                <div class="current-time" id="currentTime"></div>
+            </div>
+            
+            <div class="main-content">
+                <!-- Discord Login Section -->
+                <div class="discord-login" id="discordLogin">
+                    <h3>🔐 Discord Authentication Required</h3>
+                    <p>เข้าสู่ระบบด้วย Discord เพื่อใช้งาน FiveM Duty Tracker</p>
+                    
+                    <div id="discordLoginForm">
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: white;">Discord Username:</label>
+                            <input type="text" id="discordUsername" placeholder="ใส่ Username Discord ของคุณ" 
+                                   style="width: 100%; padding: 10px; border: none; border-radius: 8px; background: rgba(255,255,255,0.9); color: #333;">
+                        </div>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: white;">Discord ID (ไม่บังคับ):</label>
+                            <input type="text" id="discordId" placeholder="ใส่ Discord ID ของคุณ (18 หลัก)" 
+                                   style="width: 100%; padding: 10px; border: none; border-radius: 8px; background: rgba(255,255,255,0.9); color: #333;">
+                            <small style="color: rgba(255,255,255,0.8); font-size: 0.8rem;">เปิด Discord → Settings → Advanced → Developer Mode → คลิกขวาโปรไฟล์ → Copy User ID</small>
+                        </div>
+                        
+                        <button class="discord-btn" onclick="authenticateDiscord()">
+                            <span>🎮</span>
+                            เข้าสู่ระบบ Discord
+                        </button>
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('tracker')">🎭 Duty Tracker</button>
+                    <button class="tab" onclick="switchTab('analytics')">📊 Analytics</button>
+                    <button class="tab" onclick="switchTab('goals')">🏆 Goals</button>
+                    <button class="tab" onclick="switchTab('team')">👥 Department</button>
+                </div>
+
+                <!-- Tracker Tab -->
+                <div class="tab-content active" id="tracker-tab">
+                    <div class="name-section">
+                        <label for="userName">👤 ชื่อผู้เล่น (IC Name):</label>
+                        <div class="input-group">
+                            <span class="input-icon">👤</span>
+                            <input type="text" id="userName" placeholder="กรุณากรอกชื่อตัวละครของคุณ" 
+                                   onkeyup="showNameSuggestions()" onfocus="showNameSuggestions()" onblur="hideNameSuggestions()"
+                                   onkeydown="handleNameInputKeydown(event)" autocomplete="off">
+                        </div>
+                        <div id="nameSuggestions" style="display: none; border-radius: 8px; max-height: 150px; overflow-y: auto; position: relative; z-index: 100; margin-top: 5px;"></div>
+                    </div>
+
+                    <div class="job-selector">
+                        <label for="jobSelect">💼 อาชีพ / Department:</label>
+                        <select id="jobSelect" onchange="updateJobIcon()">
+                            <option value="doctor">👨‍⚕️ หมอ (EMS/Hospital)</option>
+                            <option value="police">👮‍♂️ ตำรวจ (Police Department)</option>
+                            <option value="government">🏛️ สภา (Government)</option>
+                        </select>
+                        
+                        <div class="job-icons">
+                            <div class="job-icon active" data-job="doctor">
+                                <div style="font-size: 2rem;">👨‍⚕️</div>
+                                <div>หมอ</div>
+                                <small>EMS</small>
+                            </div>
+                            <div class="job-icon" data-job="police">
+                                <div style="font-size: 2rem;">👮‍♂️</div>
+                                <div>ตำรวจ</div>
+                                <small>LSPD</small>
+                            </div>
+                            <div class="job-icon" data-job="government">
+                                <div style="font-size: 2rem;">🏛️</div>
+                                <div>สภา</div>
+                                <small>GOV</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="warning" class="warning" style="display: none;">
+                        กรุณากรอกชื่อตัวละครของคุณก่อนเข้าเวร
+                    </div>
+
+                    <div class="buttons">
+                        <button class="btn btn-checkin" id="checkinBtn" onclick="checkIn()">
+                            🟢 เข้าเวร (On Duty)
+                        </button>
+                        <button class="btn btn-checkout" id="checkoutBtn" onclick="checkOut()" disabled>
+                            🔴 ออกเวร (Off Duty)
+                        </button>
+                        <button class="btn btn-break" id="breakBtn" onclick="toggleBreak()" disabled>
+                            ⏸️ พักเบรก (AFK)
+                        </button>
+                        <button class="btn btn-voice" onclick="openJobHelper()">
+                            🎭 Job Helper
+                        </button>
+                    </div>
+
+                    <div class="break-timer" id="breakTimer">
+                        <h3>⏸️ กำลังพักเบรก (AFK)</h3>
+                        <div style="font-size: 2rem; margin: 10px 0;" id="breakTime">05:00</div>
+                        <button class="btn" onclick="endBreak()" style="background: var(--success-color); color: white;">
+                            กลับมาเข้าเวร
+                        </button>
+                    </div>
+
+                    <div class="status" id="statusSection" style="display: none;">
+                        <h3>📊 สถานะการเข้าเวร</h3>
+                        <div class="status-info">
+                            <div class="info-item">
+                                <div class="info-label">ชื่อตัวละคร</div>
+                                <div class="info-value" id="displayName"></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">สถานะ</div>
+                                <div class="info-value" id="workStatus"></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">อาชีพ</div>
+                                <div class="info-value" id="currentJob"></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">เวลาเข้าเวร</div>
+                                <div class="info-value" id="checkinTime"></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">เวลาเข้าเวรแล้ว</div>
+                                <div class="info-value" id="workingTime">00:00:00</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">คะแนน RP</div>
+                                <div class="info-value" id="currentScore">85%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="notes-section">
+                        <label for="sessionNotes">📝 บันทึกการเข้าเวร (RP Log):</label>
+                        <textarea id="sessionNotes" placeholder="บันทึกสิ่งที่ทำระหว่างเข้าเวร... เช่น รักษาคนไข้ 3 คน, จับผู้ร้าย 2 คน, ประชุมสภา 1 ชั่วโมง"></textarea>
+                    </div>
+                </div>
+
+                <!-- Analytics Tab -->
+                <div class="tab-content" id="analytics-tab">
+                    <div class="productivity-score">
+                        <h3>🏆 คะแนน Roleplay</h3>
+                        <div class="score-circle" style="--score: 85">
+                            <div class="score-number" id="productivityScore">85</div>
+                        </div>
+                        <p>RP ดีมาก! คุณเป็นผู้เล่นที่ดีเยี่ยม! 🎉</p>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3>📈 สถิติการเข้าเวร 7 วันที่ผ่านมา</h3>
+                        <div class="chart" id="weeklyChart">
+                            <div class="chart-bar" style="height: 60%;" title="จันทร์: 6 ชั่วโมง"></div>
+                            <div class="chart-bar" style="height: 80%;" title="อังคาร: 8 ชั่วโมง"></div>
+                            <div class="chart-bar" style="height: 70%;" title="พุธ: 7 ชั่วโมง"></div>
+                            <div class="chart-bar" style="height: 90%;" title="พฤหัส: 9 ชั่วโมง"></div>
+                            <div class="chart-bar" style="height: 85%;" title="ศุกร์: 8.5 ชั่วโมง"></div>
+                            <div class="chart-bar" style="height: 40%;" title="เสาร์: 4 ชั่วโมง"></div>
+                            <div class="chart-bar" style="height: 30%;" title="อาทิตย์: 3 ชั่วโมง"></div>
+                        </div>
+                    </div>
+
+                    <div class="export-buttons">
+                        <button class="btn btn-checkin" onclick="exportToExcel()">📊 Excel</button>
+                        <button class="btn btn-checkout" onclick="exportToPDF()">📄 PDF</button>
+                        <button class="btn btn-break" onclick="exportToCSV()">📋 CSV</button>
+                        <button class="btn btn-voice" onclick="downloadData()">💾 JSON</button>
+                    </div>
+                </div>
+
+                <!-- Goals Tab -->
+                <div class="tab-content" id="goals-tab">
+                    <div class="goals-section">
+                        <h3>🎯 เป้าหมายการเข้าเวร</h3>
+                        
+                        <div class="goal-item">
+                            <div>
+                                <strong>เป้าหมายรายวัน</strong>
+                                <br><small>4 ชั่วโมง/วัน (เหมาะสำหรับ FiveM)</small>
+                            </div>
+                            <div class="goal-progress">
+                                <div class="goal-progress-bar" style="width: 75%"></div>
+                            </div>
+                        </div>
+
+                        <div class="goal-item">
+                            <div>
+                                <strong>เป้าหมายรายสัปดาห์</strong>
+                                <br><small>20 ชั่วโมง/สัปดาห์</small>
+                            </div>
+                            <div class="goal-progress">
+                                <div class="goal-progress-bar" style="width: 60%"></div>
+                            </div>
+                        </div>
+
+                        <div class="goal-item">
+                            <div>
+                                <strong>เป้าหมายรายเดือน</strong>
+                                <br><small>80 ชั่วโมง/เดือน</small>
+                            </div>
+                            <div class="goal-progress">
+                                <div class="goal-progress-bar" style="width: 45%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="goals-section">
+                        <h3>🏅 ความสำเร็จ (Achievements)</h3>
+                        <div class="achievements">
+                            <div class="achievement unlocked">
+                                <div style="font-size: 2rem;">🎭</div>
+                                <div><strong>First Day</strong></div>
+                                <small>เข้าเวรวันแรก</small>
+                            </div>
+                            <div class="achievement unlocked">
+                                <div style="font-size: 2rem;">⏰</div>
+                                <div><strong>Time Master</strong></div>
+                                <small>เข้าเวร 4 ชั่วโมงต่อเนื่อง</small>
+                            </div>
+                            <div class="achievement">
+                                <div style="font-size: 2rem;">📅</div>
+                                <div><strong>Week Warrior</strong></div>
+                                <small>เข้าเวรครบ 5 วัน</small>
+                            </div>
+                            <div class="achievement">
+                                <div style="font-size: 2rem;">🎮</div>
+                                <div><strong>RP Master</strong></div>
+                                <small>คะแนน RP 90%</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Team Tab -->
+                <div class="tab-content" id="team-tab">
+                    <div class="team-dashboard">
+                        <h3>👥 สถานะแผนก (Department Status)</h3>
+                        
+                        <div class="team-member">
+                            <div style="display: flex; align-items: center;">
+                                <span class="status-indicator working"></span>
+                                <div>
+                                    <strong>Dr.Johnson</strong>
+                                    <br><small>กำลังเข้าเวร - EMS</small>
+                                </div>
+                            </div>
+                            <div>2:30:45</div>
+                        </div>
+
+                        <div class="team-member">
+                            <div style="display: flex; align-items: center;">
+                                <span class="status-indicator break"></span>
+                                <div>
+                                    <strong>Officer.Smith</strong>
+                                    <br><small>พักเบรก - LSPD</small>
+                                </div>
+                            </div>
+                            <div>0:15:30</div>
+                        </div>
+
+                        <div class="team-member">
+                            <div style="display: flex; align-items: center;">
+                                <span class="status-indicator offline"></span>
+                                <div>
+                                    <strong>Mayor.Williams</strong>
+                                    <br><small>ออฟไลน์ - Government</small>
+                                </div>
+                            </div>
+                            <div>--:--:--</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="analytics-panel">
+            <div class="header">
+                <h2>📊 FiveM Dashboard</h2>
+            </div>
+            
+            <div class="main-content">
+                <div id="summarySection" style="display: none;">
+                    <h3>📈 สรุปการเข้าเวร</h3>
+                    <div id="summaryContent"></div>
+                    
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                        <h4 style="margin-bottom: 15px; color: #5865F2;">🎯 ส่งสรุปไป Discord</h4>
+                        
+                        <button class="btn" id="sendDiscordBtn" onclick="sendToDiscord()" 
+                                style="background: linear-gradient(135deg, #5865F2 0%, #7289DA 100%); color: white; width: 100%; margin-bottom: 10px;">
+                            📤 ส่งสรุปไป Discord
+                        </button>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <button type="button" onclick="toggleWebhookSettings()" 
+                                    style="background: none; border: none; color: var(--text-color); text-decoration: underline; cursor: pointer; font-size: 0.9rem;">
+                                ⚙️ เปลี่ยนการตั้งค่า Discord
+                            </button>
+                        </div>
+                        
+                        <div id="webhookSettings" style="display: none; background: var(--bg-color); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Discord Webhook URL:</label>
+                            <input type="url" id="webhookUrl" 
+                                   value="https://discord.com/api/webhooks/1401440327809765407/ELxqKt4xjCzesVTF5LY-Hm5M6zM8une4CaCNg1-zxZ98hg1NptW1wpKAwEOWoDacjcMv"
+                                   style="width: 100%; padding: 10px; border: 2px solid var(--border-color); border-radius: 8px; font-size: 0.9rem; background: var(--card-bg); color: var(--text-color);">
+                            <small style="color: var(--text-color); opacity: 0.7; display: block; margin-top: 5px;">
+                                ✅ Webhook ถูกตั้งค่าแล้ว - พร้อมใช้งาน!
+                            </small>
+                        </div>
+                        
+                        <div id="discordStatus" style="margin-top: 10px; padding: 10px; border-radius: 8px; display: none;"></div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                        <h4 style="margin-bottom: 15px; color: #28a745;">💾 สำรองข้อมูล</h4>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+                            <button class="btn" onclick="downloadData()" 
+                                    style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white;">
+                                📥 ดาวน์โหลดข้อมูล
+                            </button>
+                            <button class="btn" onclick="document.getElementById('fileInput').click()" 
+                                    style="background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%); color: white;">
+                                📤 เรียกคืนข้อมูล
+                            </button>
+                        </div>
+                        
+                        <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="uploadData(event)">
+                        
+                        <div id="backupStatus" style="margin-top: 10px; padding: 10px; border-radius: 8px; display: none;"></div>
+                    </div>
+                    
+                    <div id="allUsersSection" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color); display: none;">
+                        <h4 style="margin-bottom: 15px; color: #6f42c1;">👥 สรุปการเข้าเวรทุกคน</h4>
+                        <div id="allUsersContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global Variables
+        let isWorking = false;
+        let isOnBreak = false;
+        let isLoggedIn = false;
+        let discordUser = null;
+        let checkInTimestamp = null;
+        let breakStartTime = null;
+        let breakDuration = 5 * 60 * 1000; // 5 minutes
+        let workingSessions = [];
+        let currentTimer = null;
+        let breakTimer = null;
+        let allUsersData = {};
+        let currentTheme = 'light';
+        let recognition = null;
+
+        // Discord Authentication
+        function authenticateDiscord() {
+            const username = document.getElementById('discordUsername').value.trim();
+            const discordId = document.getElementById('discordId').value.trim();
+            
+            if (!username) {
+                showNotification('กรุณาใส่ Discord Username', 'error');
+                return;
+            }
+            
+            // Validate Discord ID if provided
+            if (discordId && (discordId.length !== 18 || isNaN(discordId))) {
+                showNotification('Discord ID ต้องเป็นตัวเลข 18 หลัก', 'error');
+                return;
+            }
+            
+            const loginSection = document.getElementById('discordLogin');
+            
+            // Show loading
+            showNotification('กำลังตรวจสอบข้อมูล Discord...', 'info');
+            
+            setTimeout(() => {
+                // Simulate successful authentication
+                isLoggedIn = true;
+                discordUser = {
+                    id: discordId || '123456789012345678',
+                    username: username,
+                    discriminator: '0000', // New Discord format
+                    avatar: `https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 6)}.png`
+                };
+                
+                loginSection.classList.add('logged-in');
+                loginSection.innerHTML = `
+                    <h3>✅ ยืนยันตัวตน Discord สำเร็จ</h3>
+                    <div class="user-info">
+                        <img src="${discordUser.avatar}" alt="Avatar" class="user-avatar">
+                        <div>
+                            <strong>@${discordUser.username}</strong>
+                            <br><small>ID: ${discordUser.id}</small>
+                            <br><small style="color: #00d26a;">● ออนไลน์</small>
+                        </div>
+                    </div>
+                    <button class="discord-btn" onclick="logoutDiscord()" style="background: #ed4245; color: white; margin-top: 10px;">
+                        🚪 ออกจากระบบ
+                    </button>
+                `;
+                
+                // Enable the system
+                enableSystem();
+                
+                // Auto-fill username
+                document.getElementById('userName').value = discordUser.username;
+                document.getElementById('userName').disabled = false;
+                
+                showNotification(`ยินดีต้อนรับ @${discordUser.username}! พร้อมใช้งานแล้ว`, 'success');
+                
+                // Auto-save Discord info
+                autoSaveData();
+                
+            }, 2000);
+        }
+
+        function logoutDiscord() {
+            if (isWorking) {
+                if (!confirm('คุณกำลังเข้าเวรอยู่! การออกจากระบบจะทำให้ออกเวรอัตโนมัติ ต้องการดำเนินการต่อหรือไม่?')) {
+                    return;
+                }
+                // Auto checkout before logout
+                autoCheckOut();
+            }
+            
+            isLoggedIn = false;
+            discordUser = null;
+            
+            const loginSection = document.getElementById('discordLogin');
+            loginSection.classList.remove('logged-in');
+            loginSection.innerHTML = `
+                <h3>🔐 Discord Authentication Required</h3>
+                <p>เข้าสู่ระบบด้วย Discord เพื่อใช้งาน FiveM Duty Tracker</p>
+                
+                <div id="discordLoginForm">
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: white;">Discord Username:</label>
+                        <input type="text" id="discordUsername" placeholder="ใส่ Username Discord ของคุณ" 
+                               style="width: 100%; padding: 10px; border: none; border-radius: 8px; background: rgba(255,255,255,0.9); color: #333;">
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600; color: white;">Discord ID (ไม่บังคับ):</label>
+                        <input type="text" id="discordId" placeholder="ใส่ Discord ID ของคุณ (18 หลัก)" 
+                               style="width: 100%; padding: 10px; border: none; border-radius: 8px; background: rgba(255,255,255,0.9); color: #333;">
+                        <small style="color: rgba(255,255,255,0.8); font-size: 0.8rem;">เปิด Discord → Settings → Advanced → Developer Mode → คลิกขวาโปรไฟล์ → Copy User ID</small>
+                    </div>
+                    
+                    <button class="discord-btn" onclick="authenticateDiscord()">
+                        <span>🎮</span>
+                        เข้าสู่ระบบ Discord
+                    </button>
+                </div>
+            `;
+            
+            // Disable the system
+            disableSystem();
+            
+            // Clear username
+            document.getElementById('userName').value = '';
+            
+            showNotification('ออกจากระบบแล้ว', 'info');
+        }
+
+        // Enable/Disable System
+        function enableSystem() {
+            // Enable all buttons and inputs
+            document.getElementById('userName').disabled = false;
+            document.getElementById('jobSelect').disabled = false;
+            document.getElementById('checkinBtn').disabled = false;
+            
+            // Enable tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.disabled = false;
+                tab.style.opacity = '1';
+                tab.style.pointerEvents = 'all';
+            });
+            
+            // Show success message
+            const warningDiv = document.getElementById('systemWarning');
+            if (warningDiv) {
+                warningDiv.style.display = 'none';
+            }
+        }
+
+        function disableSystem() {
+            // Disable all buttons and inputs
+            document.getElementById('userName').disabled = true;
+            document.getElementById('jobSelect').disabled = true;
+            document.getElementById('checkinBtn').disabled = true;
+            document.getElementById('checkoutBtn').disabled = true;
+            document.getElementById('breakBtn').disabled = true;
+            
+            // Disable tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.disabled = true;
+                tab.style.opacity = '0.5';
+                tab.style.pointerEvents = 'none';
+            });
+            
+            // Hide status if working
+            document.getElementById('statusSection').style.display = 'none';
+            document.getElementById('floatingStats').classList.remove('show');
+            
+            // Show warning message
+            let warningDiv = document.getElementById('systemWarning');
+            if (!warningDiv) {
+                warningDiv = document.createElement('div');
+                warningDiv.id = 'systemWarning';
+                warningDiv.className = 'warning';
+                warningDiv.innerHTML = `
+                    <strong>🔐 ต้องเข้าสู่ระบบ Discord ก่อน</strong><br>
+                    กรุณาเข้าสู่ระบบ Discord ด้านบนเพื่อใช้งาน FiveM Duty Tracker
+                `;
+                document.getElementById('tracker-tab').insertBefore(warningDiv, document.getElementById('tracker-tab').firstChild);
+            }
+            warningDiv.style.display = 'block';
+        }
+
+        // Job Helper
+        function openJobHelper() {
+            const job = document.getElementById('jobSelect').value;
+            let helperText = '';
+            
+            switch(job) {
+                case 'doctor':
+                    helperText = `
+                        🏥 <strong>คู่มือหมอ EMS:</strong><br>
+                        • ตรวจรักษาผู้ป่วยที่โรงพยาบาล<br>
+                        • ออกเก็บศพและช่วยเหลือที่เกิดเหตุ<br>
+                        • ขับรถพยาบาลไปรับคนเจ็บ<br>
+                        • ให้ยาและการรักษาแบบ RP<br>
+                        • ทำ Medical RP อย่างถูกต้อง
+                    `;
+                    break;
+                case 'police':
+                    helperText = `
+                        👮‍♂️ <strong>คู่มือตำรวจ LSPD:</strong><br>
+                        • ลาดตระเวนและดูแลความปลอดภัย<br>
+                        • จับกุมผู้กระทำผิดกฎหมาย<br>
+                        • ตั้งจุดตรวจและตรวจค้นยานพาหนะ<br>
+                        • ทำ Traffic Stop อย่างถูกต้อง<br>
+                        • เขียนรายงานและดำเนินคดี
+                    `;
+                    break;
+                case 'government':
+                    helperText = `
+                        🏛️ <strong>คู่มือเจ้าหน้าที่รัฐ:</strong><br>
+                        • ประชุมสภาและออกกฎหมาย<br>
+                        • ดูแลเรื่องภาษีและงบประมาณ<br>
+                        • จัดการเรื่องใบอนุญาตต่างๆ<br>
+                        • ประสานงานกับแผนกอื่น<br>
+                        • จัดกิจกรรมสาธารณะ
+                    `;
+                    break;
+            }
+            
+            const modal = document.createElement('div');
+            modal.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+                    <div style="background: var(--card-bg); padding: 30px; border-radius: 15px; max-width: 500px; width: 90%; color: var(--text-color);">
+                        <h2 style="margin-bottom: 20px; text-align: center;">🎭 Job Helper</h2>
+                        <div style="line-height: 1.6; margin-bottom: 20px;">
+                            ${helperText}
+                        </div>
+                        <div style="text-align: center;">
+                            <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                    style="background: var(--primary-color); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-size: 1rem; font-weight: bold; cursor: pointer;">
+                                ✅ เข้าใจแล้ว
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+        }
+
+        // Update Job Icon
+        function updateJobIcon() {
+            const selectedJob = document.getElementById('jobSelect').value;
+            const jobIcons = document.querySelectorAll('.job-icon');
+            
+            jobIcons.forEach(icon => {
+                icon.classList.remove('active');
+                if (icon.dataset.job === selectedJob) {
+                    icon.classList.add('active');
+                }
+            });
+        }
+
+        // Job Icon Click Handler
+        document.querySelectorAll('.job-icon').forEach(icon => {
+            icon.addEventListener('click', () => {
+                const job = icon.dataset.job;
+                document.getElementById('jobSelect').value = job;
+                updateJobIcon();
+            });
+        });
+
+        // Initialize Speech Recognition
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'th-TH';
+                
+                recognition.onresult = function(event) {
+                    const command = event.results[0][0].transcript.toLowerCase();
+                    handleVoiceCommand(command);
+                };
+                
+                recognition.onerror = function(event) {
+                    showNotification('ไม่สามารถรับฟังเสียงได้', 'error');
+                };
+            }
+        }
+
+        // Handle Voice Commands
+        function handleVoiceCommand(command) {
+            if (command.includes('เข้าเวร') || command.includes('เริ่มงาน') || command.includes('on duty')) {
+                checkIn();
+            } else if (command.includes('ออกเวร') || command.includes('เลิกงาน') || command.includes('off duty')) {
+                checkOut();
+            } else if (command.includes('พัก') || command.includes('เบรก') || command.includes('afk')) {
+                toggleBreak();
+            } else if (command.includes('สถานะ') || command.includes('status')) {
+                showCurrentStatus();
+            } else {
+                showNotification('ไม่เข้าใจคำสั่ง ลองพูดใหม่', 'warning');
+            }
+        }
+
+        // Toggle Voice Recognition
+        function toggleVoiceRecognition() {
+            if (!recognition) {
+                showNotification('เบราว์เซอร์ไม่รองรับการควบคุมด้วยเสียง', 'error');
+                return;
+            }
+            
+            const voiceBtn = document.getElementById('voiceBtn');
+            
+            if (voiceBtn.classList.contains('listening')) {
+                recognition.stop();
+                voiceBtn.classList.remove('listening');
+                voiceBtn.textContent = '🎤';
+            } else {
+                recognition.start();
+                voiceBtn.classList.add('listening');
+                voiceBtn.textContent = '🔊';
+                showNotification('กำลังฟัง... พูดคำสั่งของคุณ', 'info');
+            }
+        }
+
+        // Show Current Status (Voice)
+        function showCurrentStatus() {
+            if (isWorking) {
+                const workTime = formatDuration(Date.now() - checkInTimestamp);
+                showNotification(`กำลังเข้าเวร เวลา ${workTime}`, 'info');
+            } else {
+                showNotification('ไม่ได้อยู่ในระหว่างการเข้าเวร', 'info');
+            }
+        }
+
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const themeBtn = document.querySelector('.theme-toggle');
+            
+            if (currentTheme === 'light') {
+                body.setAttribute('data-theme', 'dark');
+                themeBtn.textContent = '☀️';
+                currentTheme = 'dark';
+            } else {
+                body.removeAttribute('data-theme');
+                themeBtn.textContent = '🌙';
+                currentTheme = 'light';
+            }
+            
+            localStorage.setItem('theme', currentTheme);
+        }
+
+        // Load saved theme
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                currentTheme = savedTheme;
+                if (currentTheme === 'dark') {
+                    document.body.setAttribute('data-theme', 'dark');
+                    document.querySelector('.theme-toggle').textContent = '☀️';
+                }
+            }
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tabName === 'analytics') {
+                updateAnalytics();
+            }
+        }
+
+        // Show Notification
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            const content = document.getElementById('notificationContent');
+            
+            let icon = '💡';
+            let color = 'var(--accent-color)';
+            
+            switch(type) {
+                case 'success': icon = '✅'; color = 'var(--success-color)'; break;
+                case 'error': icon = '❌'; color = 'var(--danger-color)'; break;
+                case 'warning': icon = '⚠️'; color = 'var(--warning-color)'; break;
+            }
+            
+            content.innerHTML = `<div style="display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 1.2rem;">${icon}</span>
+                <span>${message}</span>
+            </div>`;
+            
+            notification.style.borderLeft = `4px solid ${color}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Break Functions
+        function toggleBreak() {
+            if (!isWorking) {
+                showNotification('กรุณาเข้าเวรก่อนจึงจะพักได้', 'warning');
+                return;
+            }
+            
+            if (isOnBreak) {
+                endBreak();
+            } else {
+                startBreak();
+            }
+        }
+
+        function startBreak() {
+            isOnBreak = true;
+            breakStartTime = Date.now();
+            
+            document.getElementById('breakTimer').classList.add('active');
+            document.getElementById('breakBtn').textContent = '⏸️ กำลังพัก';
+            document.getElementById('breakBtn').style.background = 'var(--warning-color)';
+            
+            updateBreakTimer();
+            breakTimer = setInterval(updateBreakTimer, 1000);
+            
+            showNotification('เริ่มพักเบรก 5 นาที', 'info');
+        }
+
+        function updateBreakTimer() {
+            const elapsed = Date.now() - breakStartTime;
+            const remaining = Math.max(0, breakDuration - elapsed);
+            
+            const minutes = Math.floor(remaining / 60000);
+            const seconds = Math.floor((remaining % 60000) / 1000);
+            
+            document.getElementById('breakTime').textContent = 
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (remaining <= 0) {
+                endBreak();
+                showNotification('เวลาพักหมดแล้ว! กลับมาเข้าเวรเถอะ 💪', 'warning');
+            }
+        }
+
+        function endBreak() {
+            isOnBreak = false;
+            clearInterval(breakTimer);
+            
+            document.getElementById('breakTimer').classList.remove('active');
+            document.getElementById('breakBtn').textContent = '⏸️ พักเบรก (AFK)';
+            document.getElementById('breakBtn').style.background = 'linear-gradient(135deg, #faa81a 0%, #e67e22 100%)';
+            
+            showNotification('กลับมาเข้าเวรแล้ว!', 'success');
+        }
+
+        // Analytics Functions
+        function updateAnalytics() {
+            updateProductivityScore();
+            updateFloatingStats();
+        }
+
+        function updateProductivityScore() {
+            // Calculate productivity based on work patterns
+            let score = 85; // Base score
+            
+            if (workingSessions.length > 0) {
+                const avgSessionTime = workingSessions.reduce((sum, session) => sum + session.duration, 0) / workingSessions.length;
+                const idealSessionTime = 2 * 60 * 60 * 1000; // 2 hours
+                
+                if (avgSessionTime > idealSessionTime * 0.8 && avgSessionTime < idealSessionTime * 1.5) {
+                    score += 10;
+                }
+            }
+            
+            score = Math.min(100, Math.max(0, score));
+            
+            const scoreElement = document.getElementById('productivityScore');
+            const scoreCircle = document.querySelector('.score-circle');
+            
+            scoreElement.textContent = score;
+            scoreCircle.style.setProperty('--score', score);
+        }
+
+        function updateFloatingStats() {
+            const stats = document.getElementById('quickStats');
+            const today = new Date().toDateString();
+            
+            let todayWork = 0;
+            workingSessions.forEach(session => {
+                if (session.checkIn.toDateString() === today) {
+                    todayWork += session.duration;
+                }
+            });
+            
+            stats.innerHTML = `
+                <div style="margin-bottom: 10px;">
+                    <strong>วันนี้:</strong> ${formatDuration(todayWork)}
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <strong>เซสชัน:</strong> ${workingSessions.length} ครั้ง
+                </div>
+                <div>
+                    <strong>คนเข้าเวร:</strong> ${Object.keys(allUsersData).length} คน
+                </div>
+            `;
+        }
+
+        // Export Functions
+        function exportToExcel() {
+            showNotification('กำลังสร้างไฟล์ Excel...', 'info');
+            
+            let csvContent = "ชื่อ,วันที่,เวลาเข้า,เวลาออก,ระยะเวลา,อาชีพ,บันทึก\n";
+            
+            workingSessions.forEach(session => {
+                const row = [
+                    session.userName || 'ไม่ระบุ',
+                    session.checkIn.toLocaleDateString('th-TH'),
+                    session.checkIn.toLocaleTimeString('th-TH'),
+                    session.checkOut.toLocaleTimeString('th-TH'),
+                    formatDuration(session.duration),
+                    getJobName(session.job) || 'ไม่ระบุ',
+                    session.notes || ''
+                ].join(',');
+                csvContent += row + "\n";
+            });
+            
+            const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `fivem-duty-report-${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            
+            showNotification('ส่งออกเป็น Excel เรียบร้อย!', 'success');
+        }
+
+        function exportToPDF() {
+            showNotification('กำลังสร้างไฟล์ PDF...', 'info');
+            
+            // Simulate PDF generation
+            setTimeout(() => {
+                showNotification('คุณสมบัติ PDF กำลังพัฒนา!', 'warning');
+            }, 2000);
+        }
+
+        function exportToCSV() {
+            exportToExcel(); // Same as Excel for now
+        }
+
+        // Original Functions (Updated for FiveM)
+        function handleNameInputKeydown(event) {
+            if (event.key === 'Enter') {
+                const suggestions = document.getElementById('nameSuggestions');
+                if (suggestions.style.display === 'block') {
+                    const firstSuggestion = suggestions.querySelector('div');
+                    if (firstSuggestion) {
+                        const userName = firstSuggestion.textContent.split(' (')[0];
+                        selectUserName(userName);
+                    }
+                }
+            } else if (event.key === 'Escape') {
+                document.getElementById('nameSuggestions').style.display = 'none';
+            }
+        }
+        
+        function normalizeUserName(name) {
+            return name.trim().toLowerCase();
+        }
+        
+        function getDisplayName(normalizedName) {
+            for (let realName in allUsersData) {
+                if (normalizeUserName(realName) === normalizedName) {
+                    return realName;
+                }
+            }
+            return null;
+        }
+        
+        function showNameSuggestions() {
+            const input = document.getElementById('userName');
+            const suggestions = document.getElementById('nameSuggestions');
+            const inputValue = input.value.toLowerCase();
+            
+            const userNames = Object.keys(allUsersData);
+            
+            if (userNames.length === 0) {
+                suggestions.style.display = 'none';
+                return;
+            }
+            
+            const matches = userNames.filter(name => 
+                normalizeUserName(name).includes(inputValue)
+            );
+            
+            if (matches.length === 0 || (matches.length === 1 && normalizeUserName(matches[0]) === normalizeUserName(input.value))) {
+                suggestions.style.display = 'none';
+                return;
+            }
+            
+            let suggestionsHTML = '';
+            matches.forEach(name => {
+                const userData = allUsersData[name];
+                const totalMinutes = Math.floor(userData.totalWorkTime / (1000 * 60));
+                suggestionsHTML += `
+                    <div style="padding: 10px; cursor: pointer; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between;" 
+                         onmousedown="selectUserName('${name}')" 
+                         onmouseover="this.style.background='var(--border-color)'" 
+                         onmouseout="this.style.background='var(--card-bg)'">
+                        <span style="font-weight: 600;">${name}</span>
+                        <small style="opacity: 0.7;">${totalMinutes} นาที (${userData.sessionCount} ครั้ง)</small>
+                    </div>
+                `;
+            });
+            
+            suggestions.innerHTML = suggestionsHTML;
+            suggestions.style.display = 'block';
+        }
+        
+        function hideNameSuggestions() {
+            setTimeout(() => {
+                document.getElementById('nameSuggestions').style.display = 'none';
+            }, 200);
+        }
+        
+        function selectUserName(name) {
+            document.getElementById('userName').value = name;
+            document.getElementById('nameSuggestions').style.display = 'none';
+        }
+
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('th-TH', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = timeString;
+        }
+
+        function updateWorkingTime() {
+            if (isWorking && checkInTimestamp) {
+                const now = Date.now();
+                const workingMs = now - checkInTimestamp;
+                const workingTimeStr = formatDuration(workingMs);
+                document.getElementById('workingTime').textContent = workingTimeStr;
+            }
+        }
+
+        function formatDuration(ms) {
+            const seconds = Math.floor(ms / 1000);
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function checkIn() {
+            // Check Discord authentication first
+            if (!isLoggedIn || !discordUser) {
+                showNotification('กรุณาเข้าสู่ระบบ Discord ก่อนเข้าเวร!', 'error');
+                return;
+            }
+            
+            const userName = document.getElementById('userName').value.trim();
+            const job = document.getElementById('jobSelect').value;
+            const warning = document.getElementById('warning');
+            
+            if (!userName) {
+                warning.style.display = 'block';
+                showNotification('กรุณากรอกชื่อตัวละครก่อนเข้าเวร', 'warning');
+                return;
+            }
+            
+            warning.style.display = 'none';
+            
+            const now = new Date();
+            checkInTimestamp = now.getTime();
+            isWorking = true;
+            
+            // Update UI
+            document.getElementById('checkinBtn').disabled = true;
+            document.getElementById('checkoutBtn').disabled = false;
+            document.getElementById('breakBtn').disabled = false;
+            document.getElementById('userName').disabled = true;
+            
+            // Show status
+            const statusSection = document.getElementById('statusSection');
+            statusSection.style.display = 'block';
+            
+            document.getElementById('displayName').textContent = `${userName} (@${discordUser.username})`;
+            document.getElementById('currentJob').textContent = getJobName(job);
+            document.getElementById('workStatus').innerHTML = '<span class="working-indicator"></span>On Duty';
+            document.getElementById('checkinTime').textContent = now.toLocaleString('th-TH');
+            
+            // Start timer
+            currentTimer = setInterval(updateWorkingTime, 1000);
+            
+            // Show floating stats
+            document.getElementById('floatingStats').classList.add('show');
+            
+            showNotification(`เข้าเวรเรียบร้อย! อาชีพ: ${getJobName(job)}`, 'success');
+        }
+
+        function getJobName(jobCode) {
+            const jobs = {
+                'doctor': '👨‍⚕️ หมอ (EMS)',
+                'police': '👮‍♂️ ตำรวจ (LSPD)',
+                'government': '🏛️ สภา (Government)'
+            };
+            return jobs[jobCode] || 'ไม่ระบุ';
+        }
+
+        function checkOut() {
+            if (!isWorking) return;
+            
+            const userNameRaw = document.getElementById('userName').value.trim();
+            const job = document.getElementById('jobSelect').value;
+            const notes = document.getElementById('sessionNotes').value.trim();
+            
+            const normalizedName = normalizeUserName(userNameRaw);
+            const existingName = getDisplayName(normalizedName);
+            const finalUserName = existingName || userNameRaw;
+            
+            const now = new Date();
+            const checkOutTimestamp = now.getTime();
+            const workDuration = checkOutTimestamp - checkInTimestamp;
+            
+            // Save session
+            const newSession = {
+                checkIn: new Date(checkInTimestamp),
+                checkOut: new Date(checkOutTimestamp),
+                duration: workDuration,
+                userName: finalUserName,
+                job: job,
+                notes: notes
+            };
+            
+            workingSessions.push(newSession);
+            updateUserSummary(finalUserName, workDuration);
+            
+            isWorking = false;
+            if (isOnBreak) {
+                endBreak();
+            }
+            clearInterval(currentTimer);
+            
+            // Update UI
+            document.getElementById('checkinBtn').disabled = false;
+            document.getElementById('checkoutBtn').disabled = true;
+            document.getElementById('breakBtn').disabled = true;
+            document.getElementById('userName').disabled = false;
+            document.getElementById('sessionNotes').value = '';
+            
+            document.getElementById('workStatus').textContent = 'Off Duty';
+            document.getElementById('floatingStats').classList.remove('show');
+            
+            showUserWorkSummary(finalUserName);
+            updateAllUsersDisplay();
+            updateSummary();
+            updateAnalytics();
+            
+            showNotification('ออกเวรเรียบร้อย!', 'success');
+        }
+        
+        function updateUserSummary(userName, workDuration) {
+            const normalizedName = normalizeUserName(userName);
+            const existingName = getDisplayName(normalizedName);
+            const finalUserName = existingName || userName;
+            
+            if (!allUsersData[finalUserName]) {
+                allUsersData[finalUserName] = {
+                    totalWorkTime: 0,
+                    sessionCount: 0,
+                    firstWorkDate: new Date().toDateString(),
+                    lastWorkDate: new Date().toDateString()
+                };
+            }
+            
+            allUsersData[finalUserName].totalWorkTime += workDuration;
+            allUsersData[finalUserName].sessionCount += 1;
+            allUsersData[finalUserName].lastWorkDate = new Date().toDateString();
+        }
+        
+        function showUserWorkSummary(userName) {
+            const normalizedName = normalizeUserName(userName);
+            const existingName = getDisplayName(normalizedName);
+            const finalUserName = existingName || userName;
+            
+            const userData = allUsersData[finalUserName];
+            if (!userData) return;
+            
+            const totalMinutes = Math.floor(userData.totalWorkTime / (1000 * 60));
+            const totalHours = Math.floor(totalMinutes / 60);
+            const remainingMinutes = totalMinutes % 60;
+            
+            let summaryText = '';
+            if (totalHours > 0) {
+                summaryText = `${totalHours} ชั่วโมง ${remainingMinutes} นาที`;
+            } else {
+                summaryText = `${totalMinutes} นาที`;
+            }
+            
+            const summaryDiv = document.createElement('div');
+            summaryDiv.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+                    <div style="background: var(--card-bg); padding: 30px; border-radius: 15px; max-width: 500px; width: 90%; box-shadow: 0 20px 40px var(--shadow-color); color: var(--text-color);">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div style="font-size: 3rem; margin-bottom: 10px;">🎉</div>
+                            <h2 style="margin-bottom: 10px;">สรุปการเข้าเวรสะสม</h2>
+                            <div style="background: var(--gradient-card); color: white; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                                <h3 style="margin: 0; font-size: 1.5rem;">🎭 ${finalUserName}</h3>
+                            </div>
+                        </div>
+                        
+                        <div style="background: var(--bg-color); padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: center;">
+                                <div style="background: var(--card-bg); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px var(--shadow-color);">
+                                    <div style="font-size: 2rem; color: var(--success-color);">⏰</div>
+                                    <div style="font-weight: bold; margin-top: 5px;">เวลารวม</div>
+                                    <div style="color: var(--success-color); font-size: 1.2rem; font-weight: bold;">${summaryText}</div>
+                                </div>
+                                <div style="background: var(--card-bg); padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px var(--shadow-color);">
+                                    <div style="font-size: 2rem; color: var(--accent-color);">📊</div>
+                                    <div style="font-weight: bold; margin-top: 5px;">จำนวนครั้ง</div>
+                                    <div style="color: var(--accent-color); font-size: 1.2rem; font-weight: bold;">${userData.sessionCount} ครั้ง</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: center;">
+                            <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                    style="background: var(--gradient-card); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-size: 1rem; font-weight: bold; cursor: pointer;">
+                                ✅ เข้าใจแล้ว
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(summaryDiv);
+        }
+        
+        function updateAllUsersDisplay() {
+            const allUsersSection = document.getElementById('allUsersSection');
+            const allUsersContent = document.getElementById('allUsersContent');
+            
+            if (Object.keys(allUsersData).length === 0) {
+                allUsersSection.style.display = 'none';
+                return;
+            }
+            
+            allUsersSection.style.display = 'block';
+            
+            let usersHTML = '';
+            Object.keys(allUsersData).sort().forEach(userName => {
+                const userData = allUsersData[userName];
+                const totalMinutes = Math.floor(userData.totalWorkTime / (1000 * 60));
+                const totalHours = Math.floor(totalMinutes / 60);
+                const remainingMinutes = totalMinutes % 60;
+                
+                let timeText = '';
+                if (totalHours > 0) {
+                    timeText = `${totalHours} ชั่วโมง ${remainingMinutes} นาที`;
+                } else {
+                    timeText = `${totalMinutes} นาที`;
+                }
+                
+                usersHTML += `
+                    <div style="background: var(--bg-color); border-radius: 10px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 4px var(--shadow-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong style="font-size: 1.1rem;">🎭 ${userName}</strong>
+                                <div style="opacity: 0.7; font-size: 0.9rem; margin-top: 5px;">
+                                    เข้าเวรแล้ว ${userData.sessionCount} ครั้ง
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="color: var(--success-color); font-weight: bold; font-size: 1.1rem;">
+                                    ⏰ ${timeText}
+                                </div>
+                                <div style="opacity: 0.7; font-size: 0.8rem;">
+                                    (${totalMinutes} นาที)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            allUsersContent.innerHTML = usersHTML;
+        }
+
+        function updateSummary() {
+            const summarySection = document.getElementById('summarySection');
+            const summaryContent = document.getElementById('summaryContent');
+            
+            if (workingSessions.length === 0) {
+                summarySection.style.display = 'none';
+                return;
+            }
+            
+            summarySection.style.display = 'block';
+            
+            let totalDuration = 0;
+            let summaryHTML = '';
+            
+            workingSessions.forEach((session, index) => {
+                totalDuration += session.duration;
+                summaryHTML += `
+                    <div style="background: var(--bg-color); padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 2px 4px var(--shadow-color);">
+                        <strong>เซสชันที่ ${index + 1}</strong><br>
+                        <small>🎭 ${session.userName} | 💼 ${getJobName(session.job)}</small><br>
+                        เข้าเวร: ${session.checkIn.toLocaleString('th-TH')}<br>
+                        ออกเวร: ${session.checkOut.toLocaleString('th-TH')}<br>
+                        ระยะเวลา: ${formatDuration(session.duration)}
+                        ${session.notes ? `<br><small>📝 ${session.notes}</small>` : ''}
+                    </div>
+                `;
+            });
+            
+            summaryHTML += `
+                <div style="background: var(--gradient-card); color: white; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    <strong>📊 รวมเวลาเข้าเวรทั้งหมด: ${formatDuration(totalDuration)}</strong>
+                </div>
+            `;
+            
+            summaryContent.innerHTML = summaryHTML;
+        }
+
+        function downloadData() {
+            const userName = document.getElementById('userName').value.trim();
+            
+            const data = {
+                userName: userName,
+                isWorking: isWorking,
+                checkInTimestamp: checkInTimestamp,
+                workingSessions: workingSessions,
+                allUsersData: allUsersData,
+                discordUser: discordUser,
+                exportDate: new Date().toISOString(),
+                version: "4.0-FiveM"
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `fivem-duty-tracker_${userName || 'ไม่ระบุชื่อ'}_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showNotification('ดาวน์โหลดข้อมูลสำเร็จ!', 'success');
+        }
+        
+        function uploadData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (file.type !== 'application/json') {
+                showNotification('กรุณาเลือกไฟล์ .json เท่านั้น', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    if (!data.version) {
+                        throw new Error('ไฟล์ไม่ถูกต้อง');
+                    }
+                    
+                    if (isWorking) {
+                        if (!confirm('คุณกำลังเข้าเวรอยู่! การเรียกคืนข้อมูลจะยกเลิกการเข้าเวรปัจจุบัน ต้องการดำเนินการต่อหรือไม่?')) {
+                            return;
+                        }
+                        clearInterval(currentTimer);
+                    }
+                    
+                    // Restore data
+                    document.getElementById('userName').value = data.userName || '';
+                    isWorking = data.isWorking || false;
+                    checkInTimestamp = data.checkInTimestamp || null;
+                    workingSessions = data.workingSessions || [];
+                    allUsersData = data.allUsersData || {};
+                    discordUser = data.discordUser || null;
+                    
+                    if (discordUser) {
+                        isLoggedIn = true;
+                        updateDiscordUI();
+                    }
+                    
+                    updateUIAfterRestore();
+                    showNotification(`เรียกคืนข้อมูลสำเร็จ! (${new Date(data.exportDate).toLocaleString('th-TH')})`, 'success');
+                    
+                } catch (error) {
+                    showNotification('ไฟล์เสียหาย หรือไม่ใช่ไฟล์ข้อมูลการเข้าเวร', 'error');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        function updateDiscordUI() {
+            if (discordUser) {
+                const loginSection = document.getElementById('discordLogin');
+                loginSection.classList.add('logged-in');
+                loginSection.innerHTML = `
+                    <h3>✅ ยืนยันตัวตน Discord สำเร็จ</h3>
+                    <div class="user-info">
+                        <img src="${discordUser.avatar}" alt="Avatar" class="user-avatar">
+                        <div>
+                            <strong>@${discordUser.username}</strong>
+                            <br><small>ID: ${discordUser.id}</small>
+                            <br><small style="color: #00d26a;">● ออนไลน์</small>
+                        </div>
+                    </div>
+                    <button class="discord-btn" onclick="logoutDiscord()" style="background: #ed4245; color: white; margin-top: 10px;">
+                        🚪 ออกจากระบบ
+                    </button>
+                `;
+                
+                // Enable system and set username
+                enableSystem();
+                if (!document.getElementById('userName').value.trim()) {
+                    document.getElementById('userName').value = discordUser.username;
+                }
+            }
+        }
+        
+        function updateUIAfterRestore() {
+            const userName = document.getElementById('userName').value;
+            
+            // Only allow system usage if Discord is logged in
+            if (!isLoggedIn || !discordUser) {
+                disableSystem();
+                return;
+            }
+            
+            if (isWorking && checkInTimestamp) {
+                document.getElementById('checkinBtn').disabled = true;
+                document.getElementById('checkoutBtn').disabled = false;
+                document.getElementById('breakBtn').disabled = false;
+                document.getElementById('userName').disabled = true;
+                
+                const statusSection = document.getElementById('statusSection');
+                statusSection.style.display = 'block';
+                
+                document.getElementById('displayName').textContent = `${userName} (@${discordUser.username})`;
+                document.getElementById('workStatus').innerHTML = '<span class="working-indicator"></span>On Duty (เรียกคืนข้อมูล)';
+                document.getElementById('checkinTime').textContent = new Date(checkInTimestamp).toLocaleString('th-TH');
+                
+                currentTimer = setInterval(updateWorkingTime, 1000);
+                updateWorkingTime();
+                
+                document.getElementById('floatingStats').classList.add('show');
+            } else {
+                document.getElementById('checkinBtn').disabled = false;
+                document.getElementById('checkoutBtn').disabled = true;
+                document.getElementById('breakBtn').disabled = true;
+                document.getElementById('userName').disabled = false;
+                document.getElementById('statusSection').style.display = 'none';
+                document.getElementById('floatingStats').classList.remove('show');
+            }
+            
+            if (workingSessions.length > 0) {
+                updateSummary();
+            }
+            
+            updateAllUsersDisplay();
+            updateAnalytics();
+        }
+
+        function toggleWebhookSettings() {
+            const settings = document.getElementById('webhookSettings');
+            if (settings.style.display === 'none') {
+                settings.style.display = 'block';
+            } else {
+                settings.style.display = 'none';
+            }
+        }
+        
+        async function sendToDiscord() {
+            const webhookUrl = document.getElementById('webhookUrl').value.trim();
+            const userNameRaw = document.getElementById('userName').value.trim();
+            
+            const normalizedName = normalizeUserName(userNameRaw);
+            const existingName = getDisplayName(normalizedName);
+            const finalUserName = existingName || userNameRaw;
+            
+            if (!webhookUrl) {
+                showNotification('กรุณาใส่ Discord Webhook URL', 'error');
+                return;
+            }
+            
+            if (workingSessions.length === 0) {
+                showNotification('ไม่มีข้อมูลการเข้าเวรให้ส่ง', 'error');
+                return;
+            }
+            
+            if (!isLoggedIn || !discordUser) {
+                showNotification('กรุณาเข้าสู่ระบบ Discord ก่อน', 'error');
+                return;
+            }
+            
+            showNotification('กำลังส่งข้อมูลไป Discord...', 'info');
+            
+            try {
+                let totalDuration = 0;
+                let sessionsText = '';
+                
+                workingSessions.forEach((session, index) => {
+                    totalDuration += session.duration;
+                    sessionsText += `**เซสชันที่ ${index + 1}**\n`;
+                    sessionsText += `🎭 ชื่อ IC: ${session.userName}\n`;
+                    sessionsText += `💼 อาชีพ: ${getJobName(session.job)}\n`;
+                    sessionsText += `⏰ เข้าเวร: ${session.checkIn.toLocaleString('th-TH')}\n`;
+                    sessionsText += `⏰ ออกเวร: ${session.checkOut.toLocaleString('th-TH')}\n`;
+                    sessionsText += `⏱️ ระยะเวลา: ${formatDuration(session.duration)}\n`;
+                    if (session.notes) {
+                        sessionsText += `📝 บันทึก: ${session.notes}\n`;
+                    }
+                    sessionsText += `\n`;
+                });
+                
+                const totalHours = Math.floor(totalDuration / (1000 * 60 * 60));
+                const totalMinutes = Math.floor((totalDuration % (1000 * 60 * 60)) / (1000 * 60));
+                
+                const discordMessage = {
+                    embeds: [
+                        {
+                            title: "🎮 FiveM Duty Report",
+                            description: `รายงานการเข้าเวรจาก <@${discordUser.id}>`,
+                            color: 0x5865F2,
+                            timestamp: new Date().toISOString(),
+                            author: {
+                                name: `@${discordUser.username}`,
+                                icon_url: discordUser.avatar
+                            },
+                            thumbnail: {
+                                url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/FiveM-Logo.png/256px-FiveM-Logo.png"
+                            },
+                            fields: [
+                                {
+                                    name: "👤 Discord User",
+                                    value: `<@${discordUser.id}> (@${discordUser.username})`,
+                                    inline: true
+                                },
+                                {
+                                    name: "🎭 IC Name",
+                                    value: finalUserName || "ไม่ระบุชื่อ",
+                                    inline: true
+                                },
+                                {
+                                    name: "📅 วันที่",
+                                    value: new Date().toLocaleDateString('th-TH', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric'
+                                    }),
+                                    inline: true
+                                },
+                                {
+                                    name: "⏰ เวลาเข้าเวรรวม",
+                                    value: `${formatDuration(totalDuration)} (${totalHours} ชั่วโมง ${totalMinutes} นาที)`,
+                                    inline: false
+                                },
+                                {
+                                    name: "📊 รายละเอียดการเข้าเวร",
+                                    value: sessionsText || "ไม่มีข้อมูล",
+                                    inline: false
+                                }
+                            ],
+                            footer: {
+                                text: "FiveM Work Tracker Pro • Roleplay Server",
+                                icon_url: "https://cdn.discordapp.com/embed/avatars/0.png"
+                            }
+                        }
+                    ]
+                };
+                
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(discordMessage)
+                });
+                
+                if (response.ok) {
+                    showNotification('ส่งสรุปไป Discord สำเร็จ!', 'success');
+                } else {
+                    throw new Error(`HTTP ${response.status}: การส่งข้อมูลล้มเหลว`);
+                }
+                
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาดในการส่งไป Discord:', error);
+                showNotification('เกิดข้อผิดพลาด: ' + error.message, 'error');
+            }
+        }
+
+        // Auto-save data every 30 seconds
+        setInterval(() => {
+            if (isWorking || workingSessions.length > 0) {
+                autoSaveData();
+                // Show subtle save indicator
+                const saveIndicator = document.createElement('div');
+                saveIndicator.innerHTML = '💾';
+                saveIndicator.style.position = 'fixed';
+                saveIndicator.style.top = '80px';
+                saveIndicator.style.right = '20px';
+                saveIndicator.style.background = 'var(--success-color)';
+                saveIndicator.style.color = 'white';
+                saveIndicator.style.padding = '5px 10px';
+                saveIndicator.style.borderRadius = '15px';
+                saveIndicator.style.fontSize = '0.8rem';
+                saveIndicator.style.zIndex = '999';
+                saveIndicator.style.opacity = '0';
+                saveIndicator.style.transition = 'opacity 0.3s';
+                
+                document.body.appendChild(saveIndicator);
+                
+                setTimeout(() => {
+                    saveIndicator.style.opacity = '1';
+                }, 100);
+                
+                setTimeout(() => {
+                    saveIndicator.style.opacity = '0';
+                    setTimeout(() => {
+                        if (saveIndicator.parentNode) {
+                            saveIndicator.parentNode.removeChild(saveIndicator);
+                        }
+                    }, 300);
+                }, 1000);
+            }
+        }, 30000);
+        
+        // Prevent data loss with auto-checkout
+        window.addEventListener('beforeunload', function (e) {
+            if (isWorking) {
+                // Auto checkout and save data
+                autoCheckOut();
+                
+                e.preventDefault();
+                e.returnValue = 'กำลังส่งข้อมูลการเข้าเวรไป Discord...';
+                return 'กำลังส่งข้อมูลการเข้าเวรไป Discord...';
+            } else if (workingSessions.length > 0) {
+                autoSaveData(); // Save existing data
+                e.preventDefault();
+                e.returnValue = 'คุณมีข้อมูลการเข้าเวร! แนะนำให้ดาวน์โหลดข้อมูลก่อนปิดหน้าเว็บ';
+                return 'คุณมีข้อมูลการเข้าเวร! แนะนำให้ดาวน์โหลดข้อมูลก่อนปิดหน้าเว็บ';
+            }
+        });
+
+        // Auto-save function
+        function autoSaveData() {
+            const data = {
+                userName: document.getElementById('userName').value.trim(),
+                isWorking: isWorking,
+                checkInTimestamp: checkInTimestamp,
+                workingSessions: workingSessions,
+                allUsersData: allUsersData,
+                discordUser: discordUser,
+                autoSaveTime: new Date().toISOString(),
+                version: "4.0-FiveM"
+            };
+            
+            localStorage.setItem('fivemWorkTrackerAutoSave', JSON.stringify(data));
+        }
+
+        // Auto-load function
+        function autoLoadData() {
+            try {
+                const savedData = localStorage.getItem('fivemWorkTrackerAutoSave');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    
+                    // Only restore if data is recent (within 24 hours)
+                    const saveTime = new Date(data.autoSaveTime);
+                    const now = new Date();
+                    const hoursDiff = (now - saveTime) / (1000 * 60 * 60);
+                    
+                    if (hoursDiff < 24 && data.discordUser) {
+                        if (confirm(`พบข้อมูลที่บันทึกอัตโนมัติเมื่อ ${saveTime.toLocaleString('th-TH')} \n\nDiscord: @${data.discordUser.username}\nต้องการเรียกคืนข้อมูลหรือไม่?`)) {
+                            // Restore Discord user data
+                            discordUser = data.discordUser;
+                            isLoggedIn = true;
+                            
+                            // Update Discord UI
+                            updateDiscordUI();
+                            
+                            // Enable system
+                            enableSystem();
+                            
+                            // Restore other data
+                            document.getElementById('userName').value = data.userName || '';
+                            isWorking = data.isWorking || false;
+                            checkInTimestamp = data.checkInTimestamp || null;
+                            workingSessions = data.workingSessions || [];
+                            allUsersData = data.allUsersData || {};
+                            
+                            updateUIAfterRestore();
+                            showNotification(`ยินดีต้อนรับกลับ @${discordUser.username}! เรียกคืนข้อมูลสำเร็จ`, 'success');
+                        } else {
+                            localStorage.removeItem('fivemWorkTrackerAutoSave');
+                        }
+                    } else if (hoursDiff >= 24) {
+                        // Remove old data
+                        localStorage.removeItem('fivemWorkTrackerAutoSave');
+                    } else if (!data.discordUser) {
+                        // Old data without Discord info
+                        localStorage.removeItem('fivemWorkTrackerAutoSave');
+                        showNotification('พบข้อมูลเก่าที่ไม่มีข้อมูล Discord - ล้างข้อมูลแล้ว', 'info');
+                    }
+                }
+            } catch (error) {
+                console.error('ไม่สามารถโหลดข้อมูลอัตโนมัติได้:', error);
+                localStorage.removeItem('fivemWorkTrackerAutoSave');
+            }
+        }
+
+        // ออกเวรอัตโนมัติเมื่อปิดเบราว์เซอร์
+        async function autoCheckOut() {
+            if (!isWorking) return;
+            
+            const userNameRaw = document.getElementById('userName').value.trim();
+            const job = document.getElementById('jobSelect').value;
+            const notes = document.getElementById('sessionNotes').value.trim();
+            
+            const normalizedName = normalizeUserName(userNameRaw);
+            const existingName = getDisplayName(normalizedName);
+            const finalUserName = existingName || userNameRaw;
+            
+            const now = new Date();
+            const checkOutTimestamp = now.getTime();
+            const workDuration = checkOutTimestamp - checkInTimestamp;
+            
+            // บันทึกเซสชัน
+            const newSession = {
+                checkIn: new Date(checkInTimestamp),
+                checkOut: new Date(checkOutTimestamp),
+                duration: workDuration,
+                userName: finalUserName,
+                job: job,
+                notes: notes + ' (ออกเวรอัตโนมัติ)'
+            };
+            
+            workingSessions.push(newSession);
+            
+            // อัพเดทข้อมูลสะสม
+            if (!allUsersData[finalUserName]) {
+                allUsersData[finalUserName] = {
+                    totalWorkTime: 0,
+                    sessionCount: 0,
+                    firstWorkDate: new Date().toDateString(),
+                    lastWorkDate: new Date().toDateString()
+                };
+            }
+            
+            allUsersData[finalUserName].totalWorkTime += workDuration;
+            allUsersData[finalUserName].sessionCount += 1;
+            allUsersData[finalUserName].lastWorkDate = new Date().toDateString();
+            
+            // บันทึกข้อมูลลง localStorage
+            autoSaveData();
+            
+            // สร้างข้อมูลสำหรับ Discord
+            const totalMinutes = Math.floor(workDuration / (1000 * 60));
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            
+            let durationText = '';
+            if (hours > 0) {
+                durationText = `${hours} ชั่วโมง ${minutes} นาที`;
+            } else {
+                durationText = `${minutes} นาที`;
+            }
+            
+            const userData = allUsersData[finalUserName];
+            const totalAccumulated = Math.floor(userData.totalWorkTime / (1000 * 60));
+            const totalHours = Math.floor(totalAccumulated / 60);
+            const totalMinutesRem = totalAccumulated % 60;
+            
+            let totalTimeText = '';
+            if (totalHours > 0) {
+                totalTimeText = `${totalHours} ชั่วโมง ${totalMinutesRem} นาที`;
+            } else {
+                totalTimeText = `${totalAccumulated} นาที`;
+            }
+            
+            // ข้อมูลสำหรับ Discord
+            const discordMessage = {
+                embeds: [
+                    {
+                        title: "🚨 Auto Check-Out (Browser Closed)",
+                        description: `ออกเวรอัตโนมัติสำหรับ <@${discordUser?.id || 'Unknown'}>`,
+                        color: 0xed4245,
+                        timestamp: new Date().toISOString(),
+                        author: {
+                            name: discordUser ? `@${discordUser.username}` : 'Unknown User',
+                            icon_url: discordUser?.avatar || 'https://cdn.discordapp.com/embed/avatars/0.png'
+                        },
+                        fields: [
+                            {
+                                name: "👤 Discord User",
+                                value: discordUser ? `<@${discordUser.id}> (@${discordUser.username})` : 'ไม่ทราบ',
+                                inline: true
+                            },
+                            {
+                                name: "🎭 IC Name",
+                                value: finalUserName,
+                                inline: true
+                            },
+                            {
+                                name: "💼 อาชีพ",
+                                value: getJobName(job),
+                                inline: true
+                            },
+                            {
+                                name: "📅 วันที่",
+                                value: new Date().toLocaleDateString('th-TH'),
+                                inline: true
+                            },
+                            {
+                                name: "⏰ เวลาเข้าเวร",
+                                value: new Date(checkInTimestamp).toLocaleString('th-TH'),
+                                inline: true
+                            },
+                            {
+                                name: "⏰ เวลาออกเวร",
+                                value: now.toLocaleString('th-TH'),
+                                inline: true
+                            },
+                            {
+                                name: "⏱️ ระยะเวลาที่เข้าเวร",
+                                value: durationText,
+                                inline: true
+                            },
+                            {
+                                name: "📊 เวลาเข้าเวรสะสม",
+                                value: `${totalTimeText} (${userData.sessionCount} ครั้ง)`,
+                                inline: false
+                            }
+                        ],
+                        footer: {
+                            text: "FiveM Work Tracker Pro • Auto Check-Out System"
+                        }
+                    }
+                ]
+            };
+            
+            // ส่งไป Discord ด้วย sendBeacon (รับประกันการส่ง)
+            const webhookUrl = document.getElementById('webhookUrl').value.trim();
+            if (webhookUrl) {
+                try {
+                    const blob = new Blob([JSON.stringify(discordMessage)], {
+                        type: 'application/json'
+                    });
+                    
+                    if (navigator.sendBeacon) {
+                        navigator.sendBeacon(webhookUrl, blob);
+                    } else {
+                        // fallback สำหรับเบราว์เซอร์เก่า
+                        fetch(webhookUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(discordMessage),
+                            keepalive: true
+                        }).catch(() => {});
+                    }
+                } catch (error) {
+                    console.error('ไม่สามารถส่งข้อมูลไป Discord ได้:', error);
+                }
+            }
+        }
+
+        // Initialize System
+        function initSystem() {
+            loadTheme();
+            
+            // Disable system initially (require Discord login)
+            disableSystem();
+            
+            // Try to auto-load saved data
+            autoLoadData();
+            
+            initSpeechRecognition();
+            setInterval(updateCurrentTime, 1000);
+            updateCurrentTime();
+            updateAnalytics();
+            updateJobIcon(); // Initialize job icon
+            
+            // PWA Support
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('data:text/javascript,');
+            }
+        }
+
+        // Start the system
+        initSystem();
+    </script>
+</body>
+</html>
